@@ -11,7 +11,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends git curl build-
 
 COPY . .
 
-RUN pip install --no-cache-dir "uv>=0.13.6" && uv sync --no-dev --frozen
+RUN pip install --no-cache-dir "uv>=0.13.6" && uv sync --no-dev
 
 EXPOSE 8082
 CMD ["uv", "run", "--no-sync", "fcc-server"]
