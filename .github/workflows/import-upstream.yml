@@ -1,0 +1,38 @@
+name: Import Free Claude Code source
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this deployment repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout upstream Free Claude Code
+        uses: actions/checkout@v4
+        with:
+          repository: Alishahryar1/free-claude-code
+          path: upstream
+          fetch-depth: 1
+      - name: Import application source while retaining deployment files
+        run: |
+          rsync -a --delete \
+            --exclude='/.git/' \
+            --exclude='/Dockerfile' \
+            --exclude='/render.yaml' \
+            --exclude='/.github/workflows/import-upstream.yml' \
+            upstream/ ./
+      - name: Commit imported source
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --cached --quiet; then
+            echo 'No source changes to import.'
+          else
+            git commit -m 'Import Free Claude Code application source'
+            git push
+          fi
