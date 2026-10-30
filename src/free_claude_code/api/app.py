@@ -35,6 +35,7 @@ from .admin_cache import AdminNoStoreMiddleware, attach_admin_no_store
 from .admin_routes import router as admin_router
 from .code_sessions_routes import router as code_router
 from .generation_paths import generation_api
+from .hosted_auth import HostedAuthMiddleware, router as hosted_auth_router
 from .ports import ApiServices
 from .request_errors import ordinary_application_error_response
 from .request_ids import (
@@ -56,7 +57,9 @@ def create_app(services: ApiServices) -> FastAPI:
     app.add_middleware(ClientRequestLifetimeMiddleware)
     app.add_middleware(RequestOutcomeMiddleware)
     app.add_middleware(RequestCorrelationMiddleware)
+    app.add_middleware(HostedAuthMiddleware)
 
+    app.include_router(hosted_auth_router)
     app.include_router(admin_router)
     app.include_router(code_router)
     app.include_router(router)
