@@ -17,3 +17,8 @@ services:
         value: "true"
       - key: ANTHROPIC_AUTH_TOKEN
         generateValue: true
+
+      - key: NEON_AUTH_BASE_URL
+        value: https://ep-aged-frog-b4o7qjuo.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth
+      - key: NEON_AUTH_JWKS_URL
+        value: https://ep-aged-frog-b4o7qjuo.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth/.well-known/jwks.json
