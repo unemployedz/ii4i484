@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 import time
 from functools import lru_cache
@@ -52,7 +53,9 @@ def verify_neon_token(token: str) -> dict[str, Any]:
 
 @router.get("/login", include_in_schema=False)
 async def login_page() -> HTMLResponse:
-    return HTMLResponse(LOGIN_HTML)
+    return HTMLResponse(
+        LOGIN_HTML.replace("__NEON_AUTH_BASE_URL__", json.dumps(_auth_base_url()))
+    )
 
 
 @router.post("/auth/session", include_in_schema=False)
@@ -162,7 +165,7 @@ button.secondary{margin-top:10px;background:#17171b;color:#eee;border:1px solid 
 <div id="message" role="status"></div></form></main>
 <script type="module">
 import { createAuthClient } from "https://esm.sh/@neondatabase/auth";
-const auth = createAuthClient("https://ep-aged-frog-b4o7qjuo.neonauth.c-6.us-east-2.aws.neon.tech/neondb/auth");
+const auth = createAuthClient(__NEON_AUTH_BASE_URL__);
 const form=document.getElementById("form"),message=document.getElementById("message"),submit=document.getElementById("submit"),toggle=document.getElementById("toggle"),nameInput=document.getElementById("name"),nameLabel=document.getElementById("nameLabel");
 let signup=false;
 toggle.addEventListener("click",()=>{signup=!signup;nameInput.hidden=!signup;nameLabel.hidden=!signup;nameInput.required=signup;submit.textContent=signup?"Create account":"Sign in";toggle.textContent=signup?"Back to sign in":"Create account";message.textContent="";});
