@@ -5,9 +5,15 @@ services:
     plan: free
     dockerfilePath: ./Dockerfile
     dockerContext: .
-    healthCheckPath: /
+    healthCheckPath: /health
     envVars:
       - key: HOST
         value: 0.0.0.0
       - key: PORT
         value: 8082
+      - key: FCC_OPEN_BROWSER
+        value: "false"
+      - key: PROXY_AUTH_ENABLED
+        value: "true"
+      - key: ANTHROPIC_AUTH_TOKEN
+        generateValue: true
