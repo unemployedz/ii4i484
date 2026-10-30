@@ -18,20 +18,22 @@ jobs:
           repository: Alishahryar1/free-claude-code
           path: upstream
           fetch-depth: 1
-      - name: Copy application source without deleting the checkout
+      - name: Copy source and keep deployment workflow
         run: |
           rsync -a \
             --exclude='/.git/' \
+            --exclude='/.github/workflows/' \
             --exclude='/Dockerfile' \
             --exclude='/render.yaml' \
-            --exclude='/.github/workflows/import-upstream.yml' \
             upstream/ ./
+          rm -rf upstream
       - name: Verify imported project
         run: |
           test -f pyproject.toml
           test -f LICENSE
           test -d src
-          echo "Source files are present."
+          test ! -e upstream/.git
+          echo "Application source imported; upstream CI workflows excluded to preserve deployment permissions."
       - name: Commit imported source
         run: |
           git config user.name 'github-actions[bot]'
