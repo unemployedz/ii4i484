@@ -56,7 +56,10 @@ def _authority_is_local(authority: str | None) -> bool:
 
 
 def require_loopback_admin(request: Request) -> None:
-    """Allow Admin access only from the local machine."""
+    """Allow local development or a verified hosted-app session."""
+
+    if getattr(request.state, "hosted_authenticated", False):
+        return
 
     client_host = request.client.host if request.client else None
     if not _is_loopback_host(client_host):
